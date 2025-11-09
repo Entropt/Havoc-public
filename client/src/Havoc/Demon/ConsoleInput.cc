@@ -2373,9 +2373,9 @@ auto DemonCommands::DispatchCommand( bool Send, QString TaskID, const QString& c
         {
             if ( ! Send && ! CommandTaskInfo[ TaskID ].isEmpty() )
             {
-                DemonConsole->AppendRaw();
-                DemonConsole->AppendRaw( Prompt );
-                DemonConsole->AppendRaw( Util::ColorText::Cyan( "[*]" ) + " " + Util::ColorText::Comment( "[" + TaskID + "]") + " " + Util::ColorText::Cyan( CommandTaskInfo[ TaskID ] ) );
+                DemonConsole->AppendRaw("", false);
+                DemonConsole->AppendRaw( Prompt, false );
+                DemonConsole->AppendRaw( Util::ColorText::Cyan( "[*]" ) + " " + Util::ColorText::Comment( "[" + TaskID + "]") + " " + Util::ColorText::Cyan( CommandTaskInfo[ TaskID ] ), false );
             }
 
         CheckRegisteredCommands:
@@ -2702,9 +2702,9 @@ auto DemonCommands::DispatchCommand( bool Send, QString TaskID, const QString& c
             {
                 if ( ! CommandTaskInfo[ TaskID ].isEmpty() )
                 {
-                    DemonConsole->AppendRaw();
-                    DemonConsole->AppendRaw( Prompt );
-                    DemonConsole->AppendRaw( Util::ColorText::Cyan( "[*]" ) + " " + CommandTaskInfo[ TaskID ] );
+                    DemonConsole->AppendRaw("", false);
+                    DemonConsole->AppendRaw( Prompt, false );
+                    DemonConsole->AppendRaw( Util::ColorText::Cyan( "[*]" ) + " " + CommandTaskInfo[ TaskID ], false );
                 }
             }
 

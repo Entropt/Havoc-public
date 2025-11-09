@@ -152,6 +152,7 @@ set(
         src/Util/ColorText.cpp
         src/Util/Base64.cpp
         src/Util/Base.cpp
+        src/Util/AnsiParser.cpp
 )
 
 # src for Havoc

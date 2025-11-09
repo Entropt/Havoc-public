@@ -1,6 +1,7 @@
 #include <global.hpp>
 #include <UserInterface/Widgets/DemonInteracted.h>
 #include <Util/ColorText.h>
+#include <Util/AnsiParser.h>
 
 #include <QDate>
 #include <QTime>
@@ -120,6 +121,38 @@ void DemonInteracted::setupUi( QWidget *Form )
     Console->setObjectName(QString::fromUtf8("Console"));
     Console->setReadOnly(true);
     Console->setLineWrapMode( QTextEdit::LineWrapMode::NoWrap );
+    
+    // Set monospace font that supports Unicode box-drawing characters
+    QFont consoleFont;
+    #ifdef Q_OS_WIN
+        // Windows fonts with good Unicode support
+        QStringList fontFamilies = {"Consolas", "Courier New", "Lucida Console"};
+    #elif Q_OS_MAC
+        // macOS fonts with good Unicode support
+        QStringList fontFamilies = {"Menlo", "Monaco", "Courier New"};
+    #else
+        // Linux fonts with good Unicode support
+        QStringList fontFamilies = {"DejaVu Sans Mono", "Liberation Mono", "Courier New", "monospace"};
+    #endif
+    
+    // Try each font until we find one that's available
+    bool fontSet = false;
+    for (const QString& family : fontFamilies) {
+        consoleFont.setFamily(family);
+        if (consoleFont.family() == family) {
+            fontSet = true;
+            break;
+        }
+    }
+    
+    // Fallback to system default monospace if none of the preferred fonts are available
+    if (!fontSet) {
+        consoleFont.setStyleHint(QFont::Monospace);
+    }
+    
+    consoleFont.setPointSize(10);
+    Console->setFont(consoleFont);
+    
     Console->setStyleSheet(
             "background-color: "+Util::ColorText::Colors::Hex::Background+";"
             + "color: "+Util::ColorText::Colors::Hex::Foreground+";"
@@ -265,8 +298,8 @@ void DemonInteracted::AppendText( const QString& text )
         {
             if ( text.split( " " )[ 0 ].compare( "help" ) == 0 )
             {
-                AppendRaw();
-                AppendRaw( DemonCommands->Prompt );
+                AppendRaw("", false);
+                AppendRaw( DemonCommands->Prompt, false );
             }
         }
 
@@ -300,9 +333,28 @@ QString DemonInteracted::TaskError( const QString &text ) const
     return TaskMessage;
 }
 
-void UserInterface::Widgets::DemonInteracted::AppendRaw(const QString& text)
+void UserInterface::Widgets::DemonInteracted::AppendRaw(const QString& text, bool parseAnsi)
 {
-    this->Console->append( text );
+    if (parseAnsi && text.contains('\x1b'))
+    {
+        // Parse ANSI escape codes and convert to HTML
+        QString htmlText = Util::AnsiParser::ParseAnsiToHtml(text);
+        this->Console->append(htmlText);
+    }
+    else if (parseAnsi)
+    {
+        // Even without ANSI codes, preserve formatting (spaces, box-drawing chars, etc.)
+        QString preservedText = text.toHtmlEscaped();
+        preservedText.replace(" ", "&nbsp;");
+        preservedText.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+        preservedText.replace("\n", "<br>");
+        this->Console->append(preservedText);
+    }
+    else
+    {
+        // Don't parse - just append as-is (for already-formatted HTML content)
+        this->Console->append(text);
+    }
 }
 
 void DemonInteracted::AppendNoNL( const QString &text )

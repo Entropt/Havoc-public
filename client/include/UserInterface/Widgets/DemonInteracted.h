@@ -45,7 +45,7 @@ namespace HavocNamespace::UserInterface::Widgets
 
         void setupUi( QWidget* Form );
         void AppendText( const QString& text );
-        void AppendRaw( const QString& text = "" );
+        void AppendRaw( const QString& text = "", bool parseAnsi = true );
         void AppendNoNL( const QString& test );
 
         QString TaskInfo( bool Show, QString TaskID, const QString& text ) const;

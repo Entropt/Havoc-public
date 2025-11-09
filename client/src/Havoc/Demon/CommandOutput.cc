@@ -26,13 +26,13 @@ void DispatchOutput::MessageOutput( QString JsonString, const QString& Date = ""
         if ( MessageType == "Error" || MessageType == "Erro" )
             this->DemonCommandInstance->DemonConsole->TaskError( Message );
         else if ( MessageType == "Good" )
-            this->DemonCommandInstance->DemonConsole->AppendRaw( Util::ColorText::Green( "[+]" ) + " " + Message );
+            this->DemonCommandInstance->DemonConsole->AppendRaw( Util::ColorText::Green( "[+]" ) + " " + Message, false );
         else if ( MessageType == "Info" )
-            this->DemonCommandInstance->DemonConsole->AppendRaw( Util::ColorText::Cyan( "[*]" ) + " " + Message );
+            this->DemonCommandInstance->DemonConsole->AppendRaw( Util::ColorText::Cyan( "[*]" ) + " " + Message, false );
         else if ( MessageType == "Warning" || MessageType == "Warn" )
-            this->DemonCommandInstance->DemonConsole->AppendRaw( Util::ColorText::Yellow( "[!]" ) + " " + Message );
+            this->DemonCommandInstance->DemonConsole->AppendRaw( Util::ColorText::Yellow( "[!]" ) + " " + Message, false );
         else
-            this->DemonCommandInstance->DemonConsole->AppendRaw( Util::ColorText::Purple( "[^]" ) + " " + Message );
+            this->DemonCommandInstance->DemonConsole->AppendRaw( Util::ColorText::Purple( "[^]" ) + " " + Message, false );
     }
 
     if ( ! Output.isEmpty() )

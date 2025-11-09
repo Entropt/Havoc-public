@@ -228,7 +228,7 @@ PyObject* DemonClass_InlineExecute( PPyDemonClass self, PyObject *args )
         {
             if ( FileRead( Path ) == nullptr )
             {
-                Sessions.InteractedWidget->AppendRaw();
+                Sessions.InteractedWidget->AppendRaw("", false);
                 Sessions.InteractedWidget->TaskError( "Failed to open object file path: " + QString( Path ) );
             }
             else
@@ -280,7 +280,7 @@ PyObject* DemonClass_InlineExecuteGetOutput( PPyDemonClass self, PyObject *args 
         {
             if ( FileRead( Path ) == nullptr )
             {
-                Sessions.InteractedWidget->AppendRaw();
+                Sessions.InteractedWidget->AppendRaw("", false);
                 Sessions.InteractedWidget->TaskError( "Failed to open object file path: " + QString( Path ) );
             }
             else
@@ -411,7 +411,7 @@ PyObject* DemonClass_ShellcodeSpawn( PPyDemonClass self, PyObject *args )
         {
             if ( FileRead( ShellcodePath ) == nullptr )
             {
-                Sessions.InteractedWidget->AppendRaw();
+                Sessions.InteractedWidget->AppendRaw("", false);
                 Sessions.InteractedWidget->TaskError( "Failed to open shellcode path: " + QString( ShellcodePath ) );
             }
             else
@@ -471,7 +471,7 @@ PyObject* DemonClass_DllSpawn( PPyDemonClass self, PyObject *args )
         {
             if ( FileRead( DllPath ) == nullptr )
             {
-                Sessions.InteractedWidget->AppendRaw();
+                Sessions.InteractedWidget->AppendRaw("", false);
                 Sessions.InteractedWidget->TaskError( "Failed to open dll path: " + QString( DllPath ) );
             }
             else
