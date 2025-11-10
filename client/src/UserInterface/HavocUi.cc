@@ -270,10 +270,11 @@ void HavocNamespace::UserInterface::HavocUi::UpdateSessionsHealth()
         auto Now  = QDateTime::currentDateTimeUtc();
         auto diff = session.LastUTC.secsTo( Now );
 
-        auto seconds = QDateTime::fromTime_t( diff ).toUTC().toString("s");
-        auto minutes = QDateTime::fromTime_t( diff ).toUTC().toString("m");
-        auto hours   = QDateTime::fromTime_t( diff ).toUTC().toString("h");
-        auto days    = QDateTime::fromTime_t( diff ).toUTC().toString("d");
+        // Calculate time components from the difference in seconds
+        auto days    = diff / (24 * 60 * 60);
+        auto hours   = (diff % (24 * 60 * 60)) / (60 * 60);
+        auto minutes = (diff % (60 * 60)) / 60;
+        auto seconds = diff % 60;
 
         if ( diff < 60 )
         {
@@ -282,17 +283,17 @@ void HavocNamespace::UserInterface::HavocUi::UpdateSessionsHealth()
         }
         else if ( diff < 60 * 60 )
         {
-            session.Last = QString("%1m %2s").arg(minutes, seconds);
+            session.Last = QString("%1m %2s").arg(minutes).arg(seconds);
             HavocX::Teamserver.TabSession->SessionTableWidget->ChangeSessionValue(session.Name, 8, session.Last.toStdString().c_str());
         }
         else if ( diff < 24 * 60 * 60 )
         {
-            session.Last = QString("%1h %2m").arg(hours, minutes);
+            session.Last = QString("%1h %2m").arg(hours).arg(minutes);
             HavocX::Teamserver.TabSession->SessionTableWidget->ChangeSessionValue(session.Name, 8, session.Last.toStdString().c_str());
         }
         else
         {
-            session.Last = QString("%1d %2h").arg(days, hours);
+            session.Last = QString("%1d %2h").arg(days).arg(hours);
             HavocX::Teamserver.TabSession->SessionTableWidget->ChangeSessionValue(session.Name, 8, session.Last.toStdString().c_str());
         }
 
